@@ -89,7 +89,7 @@ export default function MyWorkouts() {
                     <div className="flex items-center gap-3">
                         {(user?.role === "personal" || user?.role === "user") && (
                             <Link
-                                href={`/dashboard/workouts/new?edit=${viewingWorkout.id}`}
+                                href={`/workouts/new?edit=${viewingWorkout.id}`}
                                 id="workout-view-edit-link"
                                 className="p-4 rounded-2xl bg-primary text-white font-bold text-xs uppercase tracking-widest px-8 hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all"
                             >
@@ -148,7 +148,7 @@ export default function MyWorkouts() {
                 </h3>
                 {(user?.role === "personal" || user?.role === "user") && (
                     <Link
-                        href="/dashboard/workouts/new"
+                        href="/workouts/new"
                         id="create-new-workout-link"
                         className="px-6 py-2.5 rounded-2xl bg-primary text-white text-xs font-black uppercase tracking-widest hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all"
                     >
@@ -171,7 +171,7 @@ export default function MyWorkouts() {
                                     {(user?.role === "personal" || user?.role === "user") && (
                                         <>
                                             <Link
-                                                href={`/dashboard/workouts/new?edit=${w.id}`}
+                                                href={`/workouts/new?edit=${w.id}`}
                                                 id={`workout-edit-btn-${w.id}`}
                                                 className="p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-primary transition-all"
                                             >

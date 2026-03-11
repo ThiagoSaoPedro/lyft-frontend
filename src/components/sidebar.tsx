@@ -1,7 +1,4 @@
-"use client"
-
-//* Libraries imports
-import { LogOut, Plus, Settings, Users, CalendarDays, LayoutDashboard, Dumbbell as DumbbellIcon, Dumbbell } from "lucide-react"
+import { LogOut, Plus, Users, CalendarDays, Home, Dumbbell, User } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -19,45 +16,47 @@ export function Sidebar() {
 
     //* CONSTANTS * //
     const canCreate = user?.role === "personal" || user?.role === "user"
-    const canViewMine = user?.role === "student" || user?.role === "user"
 
     const navItems = [
-        { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-        { label: "Planejamento", icon: CalendarDays, href: "/dashboard/kanban" },
-        { label: "Treinos", icon: Dumbbell, href: "/dashboard/workouts" },
-        ...(user?.role === "personal" ? [{ label: "Alunos", icon: Users, href: "/dashboard/students" }] : []),
-        { label: "Configuracoes", icon: Settings, href: "/dashboard/settings" },
+        { label: "Home", icon: Home, href: "/home" },
+        { label: "Planejamento", icon: CalendarDays, href: "/kanban" },
+        { label: "Treinos", icon: Dumbbell, href: "/workouts" },
+        ...(user?.role === "personal" ? [{ label: "Alunos", icon: Users, href: "/students" }] : []),
+        { label: "Perfil", icon: User, href: "/profile" },
     ]
 
     return (
         <aside
-            className="w-64 border-r border-white/5 bg-black/20 flex flex-col pt-8 pb-4 h-full sticky top-0 overflow-y-auto"
+            className="w-64 border-r border-white/5 bg-black/40 flex flex-col pt-10 pb-8 h-[100vh] sticky top-0 overflow-y-auto shrink-0 z-40"
             id="main-sidebar"
         >
-            <div className="px-8 mb-10 flex items-center gap-3" id="sidebar-header">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.5)]">
-                    <DumbbellIcon className="w-5 h-5 text-white" />
+            <div className="px-8 mb-12 flex items-center gap-3" id="sidebar-header">
+                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)]">
+                    <Dumbbell className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold tracking-tight">
+                <span className="text-2xl font-black italic tracking-tighter uppercase text-white">
                     Lyft
                 </span>
             </div>
 
-            <nav className="flex-1 px-4 space-y-1.5" id="sidebar-nav">
-                {navItems.map((item) => (
-                    <Link
-                        key={item.href}
-                        id={`sidebar-link-${item.label.toLowerCase()}`}
-                        href={item.href}
-                        className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all ${pathname === item.href
-                            ? "bg-primary text-white shadow-[0_0_20px_rgba(139,92,246,0.3)]"
-                            : "text-gray-400 hover:text-white hover:bg-white/5"
-                            }`}
-                    >
-                        <item.icon className="w-5 h-5" />
-                        {item.label}
-                    </Link>
-                ))}
+            <nav className="flex-1 px-4 space-y-2" id="sidebar-nav">
+                {navItems.map((item) => {
+                    const isActive = pathname === item.href || (item.href === "/home" && pathname === "/")
+                    return (
+                        <Link
+                            key={item.href}
+                            id={`sidebar-link-${item.label.toLowerCase()}`}
+                            href={item.href}
+                            className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-bold transition-all duration-300 group ${isActive
+                                ? "bg-primary text-white shadow-[0_0_25px_rgba(139,92,246,0.3)]"
+                                : "text-gray-500 hover:text-white hover:bg-white/5 border border-transparent"
+                                }`}
+                        >
+                            <item.icon className={`w-5 h-5 transition-colors ${isActive ? "text-white" : "text-gray-600 group-hover:text-white"}`} />
+                            {item.label}
+                        </Link>
+                    )
+                })}
             </nav>
 
             <div className="px-4 mt-auto">
@@ -65,16 +64,16 @@ export function Sidebar() {
                     id="sidebar-logout-button"
                     onClick={() =>
                         confirm({
-                            title: "Encerrar Sessao",
+                            title: "Encerrar Sessão",
                             message: "Deseja realmente sair da plataforma agora?",
                             type: "info",
                             confirmLabel: "Sair",
                             onConfirm: logout,
                         })
                     }
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition-all text-left"
+                    className="w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-sm font-bold text-red-400 hover:bg-red-500/10 transition-all text-left group border border-transparent"
                 >
-                    <LogOut className="w-5 h-5" />
+                    <LogOut className="w-5 h-5 opacity-70 group-hover:opacity-100 transition-opacity" />
                     Sair
                 </button>
             </div>

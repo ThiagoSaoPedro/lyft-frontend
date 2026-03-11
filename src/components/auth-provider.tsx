@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setToken(savedToken)
             setUser(JSON.parse(savedUser))
             if (isPublicRoute && pathname !== "/") {
-                router.push("/dashboard")
+                router.push("/home")
             }
         } else if (!isPublicRoute) {
             router.push("/login")
