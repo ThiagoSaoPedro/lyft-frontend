@@ -10,8 +10,14 @@ import {
     Edit3,
     Eye,
     ArrowLeft,
+    Activity,
+    Flame,
+    Clock,
 } from "lucide-react"
 import Link from "next/link"
+
+//* Types imports
+import type { Workout, Exercise } from "@/features/kanban/types"
 
 //* Hooks imports
 import { useAuth } from "@/components/auth-provider"
@@ -24,9 +30,9 @@ export default function MyWorkouts() {
     //* HOOKS * //
     const { user } = useAuth()
     const { notify, confirm } = useNotification()
-    const [workouts, setWorkouts] = useState<any[]>([])
+    const [workouts, setWorkouts] = useState<Workout[]>([])
     const [loading, setLoading] = useState(true)
-    const [viewingWorkout, setViewingWorkout] = useState<any | null>(null)
+    const [viewingWorkout, setViewingWorkout] = useState<Workout | null>(null)
 
     useEffect(() => {
         fetchWorkouts()
@@ -35,7 +41,7 @@ export default function MyWorkouts() {
     //* ACTIONS * //
     const fetchWorkouts = async () => {
         try {
-            const data: any = await api.get("/workouts")
+            const data = await api.get<{ data: Workout[] }>("/workouts")
             setWorkouts(data.data || [])
         } catch (e) {
             notify({
@@ -45,6 +51,22 @@ export default function MyWorkouts() {
             })
         } finally {
             setLoading(false)
+        }
+    }
+
+    const fetchWorkoutToEdit = async (id: number) => {
+        try {
+            const data = await api.get<{ data: Workout[] }>("/workouts")
+            const workout = data.data.find((w) => w.id === id)
+            // Assuming you would do something with 'workout' here, e.g., set it to state for editing
+        } catch (e) {
+            notify({
+                title: "Erro de Conexao",
+                message: "Falha ao carregar seus treinos.",
+                type: "error",
+            })
+        } finally {
+            // setLoading(false) // Uncomment if this function also manages loading state
         }
     }
 
@@ -108,7 +130,45 @@ export default function MyWorkouts() {
                     </div>
 
                     <div className="grid grid-cols-1 gap-6" id="workout-exercises-grid">
-                        {viewingWorkout.exercises.map((ex: any, idx: number) => (
+                        {viewingWorkout.cardio_enabled && (
+                            <div className="p-8 rounded-[40px] bg-red-500/10 border-2 border-red-500/20 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden group shadow-[0_20px_50px_rgba(239,68,68,0.1)] mb-4">
+                                <div className="absolute top-0 right-0 p-12 -mr-8 -mt-8 bg-red-500/5 rounded-full blur-3xl group-hover:bg-red-500/10 transition-all" />
+                                <div className="w-20 h-20 rounded-[30px] bg-red-500/20 border border-red-500/30 flex items-center justify-center shadow-inner relative z-10">
+                                    <Activity className="w-10 h-10 text-red-500 animate-pulse" />
+                                </div>
+                                <div className="flex-1 relative z-10 text-center md:text-left">
+                                    <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-red-500/60 bg-red-500/10 px-3 py-1 rounded-full border border-red-500/20">AQUECIMENTO ELITE</span>
+                                        <div className="h-1 w-8 bg-red-500/20 rounded-full" />
+                                    </div>
+                                    <h4 className="text-3xl font-black italic tracking-tighter text-white uppercase group-hover:text-red-400 transition-colors">CARDIO PERSONALIZADO</h4>
+                                    <p className="text-gray-400 text-sm font-medium mt-1 uppercase tracking-widest opacity-60">Foco em Performance e Resistencia</p>
+                                </div>
+                                <div className="flex flex-col items-center md:items-end gap-1 relative z-10">
+                                    <div className="flex items-center gap-3 bg-black/40 px-6 py-4 rounded-[30px] border border-white/5 shadow-2xl group-hover:scale-105 transition-transform">
+                                        {viewingWorkout.cardio_type === 'calories' ? (
+                                            <>
+                                                <Flame className="w-6 h-6 text-orange-500" />
+                                                <div>
+                                                    <span className="text-2xl font-black text-white">{viewingWorkout.cardio_calories}</span>
+                                                    <span className="text-[10px] font-black text-orange-500/60 ml-2 uppercase tracking-widest">KCAL</span>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Clock className="w-6 h-6 text-blue-400" />
+                                                <div>
+                                                    <span className="text-2xl font-black text-white">{viewingWorkout.cardio_duration_minutes}</span>
+                                                    <span className="text-[10px] font-black text-blue-400/60 ml-2 uppercase tracking-widest">MIN</span>
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                    <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.4em] mr-4 mt-2">META DE HOJE</span>
+                                </div>
+                            </div>
+                        )}
+                        {viewingWorkout.exercises.map((ex: Exercise, idx: number) => (
                             <div key={idx} className="p-6 rounded-3xl bg-black/40 border border-white/5 flex flex-col md:flex-row gap-6" id={`workout-exercise-item-${idx}`}>
                                 <div className="w-12 h-12 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center font-black text-primary text-sm">
                                     #{idx + 1}
@@ -116,7 +176,7 @@ export default function MyWorkouts() {
                                 <div className="flex-1">
                                     <h4 className="text-xl font-bold text-white mb-4 uppercase tracking-tight">{ex.name}</h4>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                                        {ex.sets_config.map((set: any, sIdx: number) => (
+                                        {ex.sets_config.map((set, sIdx: number) => (
                                             <div key={sIdx} className="p-4 rounded-2xl bg-white/5 border border-white/5 flex flex-col gap-1">
                                                 <div className={`text-[8px] font-black uppercase tracking-widest ${set.type === 'warmup' ? 'text-blue-400' :
                                                     set.type === 'work' ? 'text-primary' :
@@ -189,12 +249,22 @@ export default function MyWorkouts() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                {w.exercises?.map((ex: any, i: number) => (
+                                {w.exercises?.map((ex, i: number) => (
                                     <div key={i} className="flex items-center justify-between text-xs text-gray-400 p-2 rounded-lg bg-white/2 border border-white/5">
                                         <span className="font-bold text-white capitalize">{ex.name}</span>
                                         <span className="opacity-60">{ex.sets_config?.length} blocos</span>
                                     </div>
                                 ))}
+                                {w.cardio_enabled && (
+                                    <div className="flex items-center justify-between text-[10px] text-red-400 p-2 rounded-lg bg-red-400/5 border border-red-400/10 font-black italic uppercase tracking-wider">
+                                        <span className="flex items-center gap-2">
+                                            <Activity className="w-3 h-3" /> CARDIO
+                                        </span>
+                                        <span>
+                                            {w.cardio_type === 'calories' ? `${w.cardio_calories} KCAL` : `${w.cardio_duration_minutes} MIN`}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
                             <button
                                 id={`workout-view-details-btn-${w.id}`}

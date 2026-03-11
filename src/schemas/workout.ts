@@ -5,6 +5,10 @@ export const workoutSchema = z.object({
     title: z.string().min(3, "Titulo muito curto"),
     description: z.string().optional(),
     planned_day: z.string().optional(),
+    cardio_enabled: z.boolean().default(false),
+    cardio_type: z.enum(["minutes", "calories"]).default("minutes"),
+    cardio_duration_minutes: z.coerce.number().optional().nullable(),
+    cardio_calories: z.coerce.number().optional().nullable(),
     exercises: z
         .array(
             z.object({

@@ -3,7 +3,7 @@
 //* Libraries imports
 import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
-import { GripVertical, MoreHorizontal, Clock, Flame } from "lucide-react"
+import { GripVertical, MoreHorizontal, Clock, Flame, Activity } from "lucide-react"
 
 //* Types imports
 import type { Workout } from "../types"
@@ -80,10 +80,17 @@ export function KanbanItem({ id, workout }: KanbanItemProps) {
                     <Clock className="w-3.5 h-3.5" />
                     {workout.exercises.length * 10} min
                 </div>
-                <div className={`px-2 py-0.5 rounded-full flex items-center gap-1 ${intensityColor}`}>
-                    <Flame className="w-3 h-3" />
-                    {intensity}
-                </div>
+                {workout.cardio_enabled ? (
+                    <div className="px-2 py-0.5 rounded-full flex items-center gap-1 text-red-400 bg-red-400/10 border border-red-400/20">
+                        <Activity className="w-3 h-3" />
+                        {workout.cardio_type === 'calories' ? `${workout.cardio_calories} kcal` : `${workout.cardio_duration_minutes} min`}
+                    </div>
+                ) : (
+                    <div className={`px-2 py-0.5 rounded-full flex items-center gap-1 ${intensityColor}`}>
+                        <Flame className="w-3 h-3" />
+                        {intensity}
+                    </div>
+                )}
             </div>
         </div>
     )
