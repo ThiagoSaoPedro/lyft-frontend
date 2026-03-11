@@ -9,7 +9,6 @@ import { Activity, Menu, X } from "lucide-react"
 const navLinks = [
   { label: "TECNOLOGIA", href: "#features" },
   { label: "PROTOCOLO", href: "#tech" },
-  { label: "RESULTADOS", href: "#cta" },
 ]
 
 export function Navbar() {
@@ -58,13 +57,22 @@ export function Navbar() {
         </div>
 
         {/* Desktop CTA */}
-        <a
-          id="navbar-cta-button"
-          href="#cta"
-          className="hidden md:inline-flex text-[10px] font-bold uppercase tracking-[0.2em] text-primary-foreground bg-primary px-5 py-2.5 rounded-sm transition-all duration-300 hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)]"
-        >
-          Acesso Pro
-        </a>
+        <div className="hidden md:flex items-center gap-3">
+          <a
+            id="navbar-login-button"
+            href="/login"
+            className="text-[10px] font-bold uppercase tracking-[0.2em] text-foreground px-5 py-2.5 rounded-sm transition-all duration-300 hover:text-primary"
+          >
+            Login
+          </a>
+          <a
+            id="navbar-signup-button"
+            href="/signup"
+            className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary-foreground bg-primary px-5 py-2.5 rounded-sm transition-all duration-300 hover:bg-primary/90 hover:shadow-[0_0_24px_rgba(139,92,246,0.4)]"
+          >
+            Registrar
+          </a>
+        </div>
 
         {/* Mobile Menu Toggle */}
         <button
@@ -100,14 +108,24 @@ export function Navbar() {
                   {link.label}
                 </a>
               ))}
-              <a
-                id="navbar-mobile-cta"
-                href="#cta"
-                onClick={() => setMobileOpen(false)}
-                className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary-foreground bg-primary px-5 py-3 rounded-sm text-center"
-              >
-                Acesso Pro
-              </a>
+              <div className="flex flex-col gap-3 pt-4 border-t border-border">
+                <a
+                  id="navbar-mobile-login"
+                  href="/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-[11px] font-bold uppercase tracking-[0.2em] text-foreground px-5 py-3 rounded-sm text-center hover:text-primary transition-colors"
+                >
+                  Login
+                </a>
+                <a
+                  id="navbar-mobile-signup"
+                  href="/signup"
+                  onClick={() => setMobileOpen(false)}
+                  className="text-[11px] font-bold uppercase tracking-[0.2em] text-primary-foreground bg-primary px-5 py-3 rounded-sm text-center"
+                >
+                  Registrar
+                </a>
+              </div>
             </div>
           </motion.div>
         )}
