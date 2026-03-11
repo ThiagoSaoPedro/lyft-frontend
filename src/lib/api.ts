@@ -5,11 +5,20 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
 
-    const headers = {
-        "Content-Type": "application/json",
+    const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData
+
+    const headers: any = {
         Accept: "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
+    }
+
+    if (!isFormData && !headers["Content-Type"]) {
+        headers["Content-Type"] = "application/json"
+    }
+
+    if (isFormData && headers["Content-Type"]) {
+        delete headers["Content-Type"]
     }
 
     try {
@@ -45,11 +54,15 @@ export const api = {
     get: <T>(endpoint: string, options?: RequestInit) =>
         request<T>(endpoint, { ...options, method: "GET" }),
 
-    post: <T>(endpoint: string, data?: any, options?: RequestInit) =>
-        request<T>(endpoint, { ...options, method: "POST", body: JSON.stringify(data) }),
+    post: <T>(endpoint: string, data?: any, options?: RequestInit) => {
+        const isFormData = typeof FormData !== 'undefined' && data instanceof FormData
+        return request<T>(endpoint, { ...options, method: "POST", body: isFormData ? data : JSON.stringify(data) })
+    },
 
-    put: <T>(endpoint: string, data?: any, options?: RequestInit) =>
-        request<T>(endpoint, { ...options, method: "PUT", body: JSON.stringify(data) }),
+    put: <T>(endpoint: string, data?: any, options?: RequestInit) => {
+        const isFormData = typeof FormData !== 'undefined' && data instanceof FormData
+        return request<T>(endpoint, { ...options, method: "PUT", body: isFormData ? data : JSON.stringify(data) })
+    },
 
     delete: <T>(endpoint: string, options?: RequestInit) =>
         request<T>(endpoint, { ...options, method: "DELETE" }),

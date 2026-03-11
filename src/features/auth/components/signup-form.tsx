@@ -57,7 +57,7 @@ export function SignupForm() {
             const result: any = await api.post("/register", data)
             localStorage.setItem("token", result.token)
             localStorage.setItem("user", JSON.stringify(result.user))
-            router.push("/dashboard")
+            router.push("/home")
         } catch (e: any) {
             setErrorMsg(e.message || "Erro ao criar conta")
         } finally {
