@@ -29,4 +29,4 @@ export interface Column {
     workoutIds: string[]
 }
 
-export const DAYS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo", "Backlog"]
+export const DAYS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo", "Próximos Treinos"]
