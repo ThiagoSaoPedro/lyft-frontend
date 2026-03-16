@@ -1,4 +1,4 @@
-import { LogOut, Plus, Users, CalendarDays, Home, Dumbbell, User } from "lucide-react"
+import { LogOut, Plus, Users, CalendarDays, Home, Dumbbell, User, MessageSquare } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
@@ -23,6 +23,7 @@ export function Sidebar() {
         { label: "Treinos", icon: Dumbbell, href: "/workouts" },
         ...(user?.role === "personal" ? [{ label: "Alunos", icon: Users, href: "/students" }] : []),
         { label: "Perfil", icon: User, href: "/profile" },
+        { label: "Feedback", icon: MessageSquare, href: "/feedback" },
     ]
 
     return (
